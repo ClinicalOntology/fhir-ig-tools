@@ -2,9 +2,11 @@ package org.clinicalontology.fhir.tools.ig.api;
 
 import java.util.List;
 
-public interface FhirIgRunner {
+public interface FhirIgPublisher {
 
-    public MessageList runJob();
+    void publish(MessageList messageList);
+
+    boolean success();
 
     public boolean interruptOnError();
 

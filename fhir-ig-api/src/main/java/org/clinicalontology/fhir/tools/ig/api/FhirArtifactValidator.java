@@ -1,11 +1,11 @@
 package org.clinicalontology.fhir.tools.ig.api;
 
-import org.clinicalontology.fhir.tools.ig.model.ValidationMessage;
+import org.clinicalontology.fhir.tools.ig.model.ValidationLogMessage;
 
 import java.util.List;
 
 public interface FhirArtifactValidator<T> {
 
-    List<ValidationMessage> validate(T resource);
+    List<ValidationLogMessage> validate(T resource);
 
 }
