@@ -16,6 +16,12 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.clinicalontology</groupId>
+            <artifactId>fhir-ig-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
 
