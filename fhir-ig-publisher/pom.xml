@@ -11,5 +11,13 @@
 
     <artifactId>fhir-ig-publisher</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.clinicalontology</groupId>
+            <artifactId>fhir-ig-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 
 </project>
