@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.clinicalontology.fhir.tools.ig.common;
+package org.clinicalontology.fhir.tools.ig.common.util;
 
 /**
  * utility to keep track of elapsed time and display values over time
