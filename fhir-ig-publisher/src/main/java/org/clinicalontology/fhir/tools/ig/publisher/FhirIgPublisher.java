@@ -4,6 +4,7 @@
 package org.clinicalontology.fhir.tools.ig.publisher;
 
 import org.clinicalontology.fhir.tools.ig.api.FhirIgPublisherApi;
+import org.clinicalontology.fhir.tools.ig.api.MessageManagerApi;
 import org.clinicalontology.fhir.tools.ig.config.PublisherConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,12 +17,15 @@ import org.springframework.stereotype.Component;
 public class FhirIgPublisher implements FhirIgPublisherApi {
 
 	@Autowired
+	private MessageManagerApi messageManager;
+
+	@Autowired
 	private PublisherConfiguration publisherConfiguration;
 
 	@Override
 	public void publish() {
 
-		System.err.printf("FhirIgCorePublisher.publish %s\n",
+		this.messageManager.addInfo("FhirIgCorePublisher.publish %s\n",
 				this.publisherConfiguration.getTarget());
 
 	}

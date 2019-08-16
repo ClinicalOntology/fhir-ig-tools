@@ -4,13 +4,17 @@
 package org.clinicalontology.fhir.tools.ig.common.services;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
+
+import javax.annotation.PostConstruct;
 
 import org.clinicalontology.fhir.tools.ig.api.MessageApi;
 import org.clinicalontology.fhir.tools.ig.api.MessageApi.Level;
 import org.clinicalontology.fhir.tools.ig.api.MessageManagerApi;
+import org.clinicalontology.fhir.tools.ig.common.util.ElapsedTime;
 import org.clinicalontology.fhir.tools.ig.model.FhirIgMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,9 +24,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class FhirIgMessageManager implements MessageManagerApi {
 
-	private List<MessageApi> messages = new ArrayList<>();
+	private Logger log = LoggerFactory.getLogger(FhirIgMessageManager.class);
 
-	private EnumSet<Options> options;
+	private List<MessageApi> messages;
 
 	private int errorCount;
 
@@ -32,6 +36,14 @@ public class FhirIgMessageManager implements MessageManagerApi {
 
 	private int debugCount;
 
+	private ElapsedTime elapsedTime;
+
+	@PostConstruct
+	public void init() {
+		this.messages = new ArrayList<>();
+		this.elapsedTime = new ElapsedTime();
+	}
+
 	@Override
 	public void reset() {
 		this.messages.clear();
@@ -39,11 +51,7 @@ public class FhirIgMessageManager implements MessageManagerApi {
 		this.warningCount = 0;
 		this.infoCount = 0;
 		this.debugCount = 0;
-	}
-
-	@Override
-	public void setOptions(EnumSet<Options> options) {
-		this.options = options;
+		this.elapsedTime.reset();
 	}
 
 	@Override
@@ -83,49 +91,58 @@ public class FhirIgMessageManager implements MessageManagerApi {
 
 	@Override
 	public void addMessage(MessageApi msg) {
-		boolean add = false;
+
+		String text = String.format("(%s) %s",
+				this.elapsedTime.toString(),
+				msg.getMessageText());
 
 		switch (msg.getLevel()) {
 		case WARNING:
-			if (this.options.contains(Options.CAPTURE_WARNINGS)) {
-				add = true;
+			if (this.log.isWarnEnabled()) {
+				this.log.warn(text);
+				this.messages.add(msg);
 				this.warningCount++;
 			}
 			break;
 
 		case INFO:
-			if (this.options.contains(Options.CAPTURE_INFO)) {
-				add = true;
+			if (this.log.isInfoEnabled()) {
+				this.log.info(text);
+				this.messages.add(msg);
 				this.infoCount++;
 			}
 			break;
 
 		case DEBUG:
-			if (this.options.contains(Options.CAPTURE_DEBUG)) {
-				add = true;
+			if (this.log.isDebugEnabled()) {
+				this.log.info(text);
+				this.messages.add(msg);
 				this.debugCount++;
 			}
 			break;
 
 		case ERROR:
 			this.errorCount++;
-			add = true;
+			this.log.error(text);
+			this.messages.add(msg);
 			break;
 
 		default:
 			break;
 
 		}
-		if (add) {
-			this.messages.add(msg);
-		}
-
 	}
 
 	@Override
 	public void addError(String message, Object... args) {
 		this.addMessage(new FhirIgMessage(Level.ERROR, message, args));
 
+	}
+
+	@Override
+	public void addError(Exception exception) {
+		this.addMessage(new FhirIgMessage(exception, Level.ERROR, exception
+				.getLocalizedMessage()));
 	}
 
 	@Override

@@ -1,17 +1,8 @@
 package org.clinicalontology.fhir.tools.ig.api;
 
-import java.util.EnumSet;
 import java.util.List;
 
 public interface MessageManagerApi {
-
-	public enum Options {
-		CAPTURE_WARNINGS, // capture warning messages
-		CAPTURE_INFO, // capture info messages
-		CAPTURE_DEBUG, // capture debug messages
-	};
-
-	public void setOptions(EnumSet<Options> options);
 
 	void reset();
 
@@ -32,6 +23,8 @@ public interface MessageManagerApi {
 	void addMessage(MessageApi msg);
 
 	void addError(String message, Object... args);
+
+	void addError(Exception exception);
 
 	void addWarning(String message, Object... args);
 
