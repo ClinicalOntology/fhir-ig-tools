@@ -1,13 +1,11 @@
 package org.clinicalontology.fhir.tools.ig.api;
 
-public interface FhirIgValidatorApi {
+import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
 
-	void validate();
+public interface FhirIgValidator {
+
+	void validate() throws JobRunnerException;
 
 	boolean success();
-
-	public boolean interruptOnError();
-
-	public void setInterruptOnErrorFlag(boolean interruptOnError);
 
 }

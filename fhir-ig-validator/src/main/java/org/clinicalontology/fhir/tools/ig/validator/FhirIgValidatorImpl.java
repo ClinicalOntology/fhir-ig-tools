@@ -5,11 +5,11 @@ package org.clinicalontology.fhir.tools.ig.validator;
 
 import java.io.File;
 
-import org.clinicalontology.fhir.tools.ig.api.FhirIgValidatorApi;
-import org.clinicalontology.fhir.tools.ig.api.MessageManagerApi;
+import org.clinicalontology.fhir.tools.ig.api.FhirIgValidator;
+import org.clinicalontology.fhir.tools.ig.api.MessageManager;
 import org.clinicalontology.fhir.tools.ig.common.util.FhirIgFileUtils;
-import org.clinicalontology.fhir.tools.ig.config.CommonConfiguration;
 import org.clinicalontology.fhir.tools.ig.config.ValidatorConfiguration;
+import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +18,10 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class FhirIgCoreValidator implements FhirIgValidatorApi {
+public class FhirIgValidatorImpl implements FhirIgValidator {
 
 	@Autowired
-	private MessageManagerApi messageManager;
-
-	@Autowired
-	private CommonConfiguration commonConfiguration;
+	private MessageManager messageManager;
 
 	@Autowired
 	private FhirIgFileUtils fileUtils;
@@ -33,15 +30,23 @@ public class FhirIgCoreValidator implements FhirIgValidatorApi {
 	private ValidatorConfiguration validatorConfiguration;
 
 	@Override
-	public void validate() {
+	public void validate() throws JobRunnerException {
 
-		for (File file : this.fileUtils.getSelectedPackageMembers()) {
-			System.err.printf("validate files: %s\n", file.getName());
+		this.messageManager.setInterruptOnErrorFlag(this.validatorConfiguration
+				.getInterruptOnError());
+
+		int count = 0;
+		for (File file : this.fileUtils.getSelectedProjectMembers()) {
+			this.messageManager.addInfo("validate file: %s", file.getName());
+
+			// mock error
+			count++;
+			if (count > 10) {
+				this.messageManager.addError("Too many profiles: %s", file.getName());
+			}
 		}
 
-		this.messageManager.addInfo("FhirIgCoreValidator.validate %s %s\n",
-				this.commonConfiguration.getPackage(),
-				this.validatorConfiguration.getValidate());
+		this.messageManager.interruptOnError("Validation");
 
 	}
 
@@ -49,18 +54,6 @@ public class FhirIgCoreValidator implements FhirIgValidatorApi {
 	public boolean success() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public boolean interruptOnError() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setInterruptOnErrorFlag(boolean interruptOnError) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

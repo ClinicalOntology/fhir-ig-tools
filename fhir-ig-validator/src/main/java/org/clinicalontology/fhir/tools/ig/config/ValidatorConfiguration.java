@@ -14,13 +14,14 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "ig.validator")
 public class ValidatorConfiguration {
 
-	private String validate;
+	private Boolean interruptOnError;
 
-	public String getValidate() {
-		return this.validate;
+	public Boolean getInterruptOnError() {
+		return this.interruptOnError;
 	}
 
-	public void setValidate(String validate) {
-		this.validate = validate;
+	public void setInterruptOnError(Boolean interruptOnError) {
+		this.interruptOnError = interruptOnError;
 	}
+
 }

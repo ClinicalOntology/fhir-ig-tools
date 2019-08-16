@@ -5,8 +5,8 @@ ig:
     artifacts: artifacts
     config: config
       
-  package: sample
-  packages:
+  project: sample
+  projects:
     sample: 
       name: Sample Profile Set
       path: sample

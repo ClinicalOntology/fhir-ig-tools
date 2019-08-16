@@ -6,7 +6,6 @@ package org.clinicalontology.fhir.tools.ig.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -48,7 +47,7 @@ public class CommonConfiguration {
 		}
 	}
 
-	public static class Package {
+	public static class Project {
 		private String name;
 		private String path;
 		private String filter;
@@ -80,18 +79,17 @@ public class CommonConfiguration {
 
 	private Paths paths;
 
-	@Value("${ig.package}")
-	private String pkg;
+	private String project;
 
-	public String getPackage() {
-		return this.pkg;
+	public String getProject() {
+		return this.project;
 	}
 
-	public void setPackage(String pkg) {
-		this.pkg = pkg;
+	public void setProject(String project) {
+		this.project = project;
 	}
 
-	private Map<String, Package> packages = new HashMap<>();
+	private Map<String, Project> projects = new HashMap<>();
 
 	public Paths getPaths() {
 		return this.paths;
@@ -101,12 +99,12 @@ public class CommonConfiguration {
 		this.paths = paths;
 	}
 
-	public Map<String, Package> getPackages() {
-		return this.packages;
+	public Map<String, Project> getProjects() {
+		return this.projects;
 	}
 
-	public void setPackages(Map<String, Package> packages) {
-		this.packages = packages;
+	public void setProjects(Map<String, Project> projects) {
+		this.projects = projects;
 	}
 
 }

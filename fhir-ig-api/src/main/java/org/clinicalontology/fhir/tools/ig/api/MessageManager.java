@@ -2,9 +2,23 @@ package org.clinicalontology.fhir.tools.ig.api;
 
 import java.util.List;
 
-public interface MessageManagerApi {
+import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
+
+public interface MessageManager {
 
 	void reset();
+
+	/**
+	 * enable/disable throw exception on error
+	 *
+	 * @param state -- true enable, false disable
+	 */
+	void setInterruptOnErrorFlag(boolean state);
+
+	/**
+	 * throw an exception if errors are present
+	 */
+	void interruptOnError(String module) throws JobRunnerException;
 
 	boolean isEmpty();
 
@@ -18,13 +32,13 @@ public interface MessageManagerApi {
 
 	int getDebugCount();
 
-	List<MessageApi> getMessages();
+	List<Message> getMessages();
 
-	void addMessage(MessageApi msg);
+	void addMessage(Message msg);
 
-	void addError(String message, Object... args);
+	void addError(String message, Object... args) throws JobRunnerException;
 
-	void addError(Exception exception);
+	void addError(Exception exception) throws JobRunnerException;
 
 	void addWarning(String message, Object... args);
 

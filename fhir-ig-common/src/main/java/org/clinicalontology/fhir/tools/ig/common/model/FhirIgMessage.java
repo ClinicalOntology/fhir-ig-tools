@@ -1,8 +1,8 @@
-package org.clinicalontology.fhir.tools.ig.model;
+package org.clinicalontology.fhir.tools.ig.common.model;
 
-import org.clinicalontology.fhir.tools.ig.api.MessageApi;
+import org.clinicalontology.fhir.tools.ig.api.Message;
 
-public class FhirIgMessage implements MessageApi {
+public class FhirIgMessage implements Message {
 
 	private final String message;
 	private final Level level;

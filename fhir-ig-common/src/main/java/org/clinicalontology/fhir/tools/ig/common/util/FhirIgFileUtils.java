@@ -8,9 +8,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.clinicalontology.fhir.tools.ig.api.MessageManagerApi;
+import org.clinicalontology.fhir.tools.ig.api.MessageManager;
 import org.clinicalontology.fhir.tools.ig.config.CommonConfiguration;
-import org.clinicalontology.fhir.tools.ig.config.CommonConfiguration.Package;
+import org.clinicalontology.fhir.tools.ig.config.CommonConfiguration.Project;
+import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,19 +22,19 @@ public class FhirIgFileUtils {
 	private CommonConfiguration configuration;
 
 	@Autowired
-	private MessageManagerApi messageManager;
+	private MessageManager messageManager;
 
-	private Package selectedPackage;
+	private Project selectedProject;
 	private File resourcesFolder;
 
 	@PostConstruct
-	public void init() {
-		this.selectedPackage = this.configuration.getPackages().get(this.configuration
-				.getPackage());
-		if (this.selectedPackage == null) {
+	public void init() throws JobRunnerException {
+		this.selectedProject = this.configuration.getProjects().get(this.configuration
+				.getProject());
+		if (this.selectedProject == null) {
 			this.messageManager.addError(
 					"Invalid ig.package: %s.  Does not match a package in the packages list",
-					this.configuration.getPackage());
+					this.configuration.getProject());
 		}
 
 		this.resourcesFolder = new File(this.configuration.getPaths().getResources());
@@ -49,19 +50,19 @@ public class FhirIgFileUtils {
 		}
 	}
 
-	public Package getSelectedPackage() {
-		return this.selectedPackage;
+	public Project getSelectedProject() {
+		return this.selectedProject;
 	}
 
-	public String getSelectedPackageName() {
+	public String getSelectedProjectName() {
 
-		return this.selectedPackage.getName();
+		return this.selectedProject.getName();
 	}
 
-	public List<File> getSelectedPackageMembers() {
+	public List<File> getSelectedProjectMembers() throws JobRunnerException {
 
 		List<File> files = new ArrayList<>();
-		File dir = new File(this.resourcesFolder, this.selectedPackage.getPath());
+		File dir = new File(this.resourcesFolder, this.selectedProject.getPath());
 		if (!dir.exists()) {
 			this.messageManager.addError("%s does not exist", dir.getPath());
 		} else if (!dir.isDirectory()) {
@@ -69,10 +70,10 @@ public class FhirIgFileUtils {
 		} else {
 
 			String[] fileList;
-			if (this.selectedPackage.getFilter() == null) {
+			if (this.selectedProject.getFilter() == null) {
 				fileList = dir.list();
 			} else {
-				FilenameFilter fileFilter = new WildcardFileFilter(this.selectedPackage
+				FilenameFilter fileFilter = new WildcardFileFilter(this.selectedProject
 						.getFilter());
 				fileList = dir.list(fileFilter);
 			}

@@ -1,37 +1,35 @@
 package org.clinicalontology.fhir.tools.ig.runner;
 
-import org.clinicalontology.fhir.tools.ig.api.FhirIgPublisherApi;
-import org.clinicalontology.fhir.tools.ig.api.FhirIgRunnerApi;
-import org.clinicalontology.fhir.tools.ig.api.FhirIgValidatorApi;
-import org.clinicalontology.fhir.tools.ig.api.MessageManagerApi;
+import org.clinicalontology.fhir.tools.ig.api.FhirIgPublisher;
+import org.clinicalontology.fhir.tools.ig.api.FhirIgRunner;
+import org.clinicalontology.fhir.tools.ig.api.FhirIgValidator;
+import org.clinicalontology.fhir.tools.ig.api.MessageManager;
 import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FhirIgRunner implements FhirIgRunnerApi {
+public class FhirIgRunnerImpl implements FhirIgRunner {
 
 	private boolean interruptOnError = true;
 	private boolean runValidator = true;
 	private boolean runPublisher = true;
 
 	@Autowired
-	private MessageManagerApi messageManager;
+	private MessageManager messageManager;
 
 	@Autowired
-	private FhirIgValidatorApi validator;
+	private FhirIgValidator validator;
 
 	@Autowired
-	private FhirIgPublisherApi publisher;
+	private FhirIgPublisher publisher;
 
 	@Override
 	public void runJob() {
 
 		try {
 
-			this.validator.setInterruptOnErrorFlag(this.interruptOnError);
-
-			this.messageManager.addInfo("Starting");
+			this.messageManager.addInfo("Started");
 
 			if (this.runValidator) {
 				this.validator.validate();
@@ -43,9 +41,9 @@ public class FhirIgRunner implements FhirIgRunnerApi {
 			this.messageManager.addInfo("Finished");
 
 		} catch (JobRunnerException e) {
-			this.messageManager.addError(e);
-		}
+			this.messageManager.addInfo("Interrupted: %s", e.getLocalizedMessage());
 
+		}
 	}
 
 	@Override

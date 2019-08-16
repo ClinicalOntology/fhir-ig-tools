@@ -8,11 +8,12 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.clinicalontology.fhir.tools.ig.api.MessageApi;
-import org.clinicalontology.fhir.tools.ig.api.MessageApi.Level;
-import org.clinicalontology.fhir.tools.ig.api.MessageManagerApi;
+import org.clinicalontology.fhir.tools.ig.api.Message;
+import org.clinicalontology.fhir.tools.ig.api.Message.Level;
+import org.clinicalontology.fhir.tools.ig.api.MessageManager;
+import org.clinicalontology.fhir.tools.ig.common.model.FhirIgMessage;
 import org.clinicalontology.fhir.tools.ig.common.util.ElapsedTime;
-import org.clinicalontology.fhir.tools.ig.model.FhirIgMessage;
+import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,11 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class FhirIgMessageManager implements MessageManagerApi {
+public class FhirIgMessageManager implements MessageManager {
 
 	private Logger log = LoggerFactory.getLogger(FhirIgMessageManager.class);
 
-	private List<MessageApi> messages;
+	private List<Message> messages;
 
 	private int errorCount;
 
@@ -37,6 +38,8 @@ public class FhirIgMessageManager implements MessageManagerApi {
 	private int debugCount;
 
 	private ElapsedTime elapsedTime;
+
+	private boolean interruptOnError;
 
 	@PostConstruct
 	public void init() {
@@ -55,6 +58,19 @@ public class FhirIgMessageManager implements MessageManagerApi {
 	}
 
 	@Override
+	public void setInterruptOnErrorFlag(boolean state) {
+		this.interruptOnError = state;
+	}
+
+	@Override
+	public void interruptOnError(String module) throws JobRunnerException {
+		if (this.errorCount > 0) {
+			throw new JobRunnerException("Errors Present in " + module);
+		}
+
+	}
+
+	@Override
 	public boolean isEmpty() {
 		return this.messages.size() == 0;
 	}
@@ -65,7 +81,7 @@ public class FhirIgMessageManager implements MessageManagerApi {
 	}
 
 	@Override
-	public List<MessageApi> getMessages() {
+	public List<Message> getMessages() {
 		return this.messages;
 	}
 
@@ -90,7 +106,7 @@ public class FhirIgMessageManager implements MessageManagerApi {
 	}
 
 	@Override
-	public void addMessage(MessageApi msg) {
+	public void addMessage(Message msg) {
 
 		String text = String.format("(%s) %s",
 				this.elapsedTime.toString(),
@@ -134,33 +150,38 @@ public class FhirIgMessageManager implements MessageManagerApi {
 	}
 
 	@Override
-	public void addError(String message, Object... args) {
-		this.addMessage(new FhirIgMessage(Level.ERROR, message, args));
+	public void addError(String message, Object... args) throws JobRunnerException {
+		FhirIgMessage fhirIgMessage = new FhirIgMessage(Level.ERROR, message, args);
+		this.addMessage(fhirIgMessage);
+		if (this.interruptOnError) {
+			throw new JobRunnerException(fhirIgMessage.getMessageText());
+		}
 
 	}
 
 	@Override
-	public void addError(Exception exception) {
-		this.addMessage(new FhirIgMessage(exception, Level.ERROR, exception
-				.getLocalizedMessage()));
+	public void addError(Exception exception) throws JobRunnerException {
+		FhirIgMessage fhirIgMessage = new FhirIgMessage(exception, Level.ERROR, exception
+				.getLocalizedMessage());
+		this.addMessage(fhirIgMessage);
+		if (this.interruptOnError) {
+			throw new JobRunnerException(fhirIgMessage.getMessageText(), exception);
+		}
 	}
 
 	@Override
 	public void addWarning(String message, Object... args) {
 		this.addMessage(new FhirIgMessage(Level.WARNING, message, args));
-
 	}
 
 	@Override
 	public void addInfo(String message, Object... args) {
 		this.addMessage(new FhirIgMessage(Level.INFO, message, args));
-
 	}
 
 	@Override
 	public void addDebug(String message, Object... args) {
 		this.addMessage(new FhirIgMessage(Level.DEBUG, message, args));
-
 	}
 
 }

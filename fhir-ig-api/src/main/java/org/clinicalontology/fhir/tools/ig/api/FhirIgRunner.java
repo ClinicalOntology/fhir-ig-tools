@@ -1,6 +1,6 @@
 package org.clinicalontology.fhir.tools.ig.api;
 
-public interface FhirIgRunnerApi {
+public interface FhirIgRunner {
 
 	public void runJob();
 

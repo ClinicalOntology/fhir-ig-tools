@@ -1,6 +1,6 @@
 package org.clinicalontology.fhir.tools.ig.api;
 
-public interface FhirIgPublisherApi {
+public interface FhirIgPublisher {
 
 	void publish();
 

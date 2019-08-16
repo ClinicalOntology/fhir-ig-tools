@@ -1,6 +1,6 @@
 package org.clinicalontology.fhir.tools.ig.api;
 
-public interface MessageApi {
+public interface Message {
 
 	public enum Level {
 		DEBUG,
