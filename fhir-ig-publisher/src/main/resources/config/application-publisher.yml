@@ -1,2 +1,5 @@
 ig.publisher:
-  target: publisher-target
+  interruptOnError: false
+  
+  paths:
+    published: published

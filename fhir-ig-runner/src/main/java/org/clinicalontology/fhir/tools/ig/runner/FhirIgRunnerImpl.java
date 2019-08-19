@@ -4,6 +4,7 @@ import org.clinicalontology.fhir.tools.ig.api.FhirIgPublisher;
 import org.clinicalontology.fhir.tools.ig.api.FhirIgRunner;
 import org.clinicalontology.fhir.tools.ig.api.FhirIgValidator;
 import org.clinicalontology.fhir.tools.ig.api.MessageManager;
+import org.clinicalontology.fhir.tools.ig.api.ResourceManager;
 import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,9 @@ public class FhirIgRunnerImpl implements FhirIgRunner {
 	private boolean interruptOnError = true;
 	private boolean runValidator = true;
 	private boolean runPublisher = true;
+
+	@Autowired
+	private ResourceManager resourceManager;
 
 	@Autowired
 	private MessageManager messageManager;
@@ -28,6 +32,12 @@ public class FhirIgRunnerImpl implements FhirIgRunner {
 	public void runJob() {
 
 		try {
+
+			// do the initialization here so we can capture exceptions cleanly
+			this.messageManager.init();
+			this.resourceManager.init();
+			this.validator.init();
+			this.publisher.init();
 
 			this.messageManager.addInfo("Started");
 

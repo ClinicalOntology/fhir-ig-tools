@@ -4,8 +4,10 @@
 package org.clinicalontology.fhir.tools.ig.publisher;
 
 import org.clinicalontology.fhir.tools.ig.api.FhirIgPublisher;
+import org.clinicalontology.fhir.tools.ig.api.FhirIgValidator;
 import org.clinicalontology.fhir.tools.ig.api.MessageManager;
 import org.clinicalontology.fhir.tools.ig.config.PublisherConfiguration;
+import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,29 +24,27 @@ public class FhirIgPublisherImpl implements FhirIgPublisher {
 	@Autowired
 	private PublisherConfiguration publisherConfiguration;
 
-	@Override
-	public void publish() {
+	@Autowired
+	private FhirIgValidator validator;
 
-		this.messageManager.addInfo("FhirIgCorePublisher.publish %s\n",
-				this.publisherConfiguration.getTarget());
+	@Override
+	public void init() throws JobRunnerException {
 
 	}
 
 	@Override
-	public boolean success() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public void publish() throws JobRunnerException {
 
-	@Override
-	public boolean interruptOnError() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		this.messageManager.setInterruptOnErrorFlag(this.publisherConfiguration
+				.getInterruptOnError());
 
-	@Override
-	public void setInterruptOnErrorFlag(boolean interruptOnError) {
-		// TODO Auto-generated method stub
+		// dummied up validation: simple copy validated file to destination folder
+		for (String filename : this.validator.getValidatedResources()) {
+			this.messageManager.addInfo("Published structure Definition: %s",
+					filename);
+		}
+
+		this.messageManager.interruptOnError("Published");
 
 	}
 

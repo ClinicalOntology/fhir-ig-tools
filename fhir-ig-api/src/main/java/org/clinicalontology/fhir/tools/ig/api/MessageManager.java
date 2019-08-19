@@ -6,6 +6,14 @@ import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
 
 public interface MessageManager {
 
+	/**
+	 * initialize the object
+	 */
+	void init();
+
+	/**
+	 * reset the object to original state
+	 */
 	void reset();
 
 	/**
@@ -39,6 +47,19 @@ public interface MessageManager {
 	void addError(String message, Object... args) throws JobRunnerException;
 
 	void addError(Exception exception) throws JobRunnerException;
+
+	public void addError(Exception exception, String message, Object... args)
+			throws JobRunnerException;
+
+	/**
+	 * A fatal error means that progress cannot continue. It will always throw an
+	 * exception
+	 *
+	 * @param message
+	 * @param args
+	 * @throws JobRunnerException
+	 */
+	void addFatalError(String message, Object... args) throws JobRunnerException;
 
 	void addWarning(String message, Object... args);
 

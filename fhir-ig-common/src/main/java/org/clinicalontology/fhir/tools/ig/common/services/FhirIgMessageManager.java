@@ -6,8 +6,6 @@ package org.clinicalontology.fhir.tools.ig.common.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.clinicalontology.fhir.tools.ig.api.Message;
 import org.clinicalontology.fhir.tools.ig.api.Message.Level;
 import org.clinicalontology.fhir.tools.ig.api.MessageManager;
@@ -41,7 +39,7 @@ public class FhirIgMessageManager implements MessageManager {
 
 	private boolean interruptOnError;
 
-	@PostConstruct
+	@Override
 	public void init() {
 		this.messages = new ArrayList<>();
 		this.elapsedTime = new ElapsedTime();
@@ -160,9 +158,27 @@ public class FhirIgMessageManager implements MessageManager {
 	}
 
 	@Override
+	public void addFatalError(String message, Object... args) throws JobRunnerException {
+		FhirIgMessage fhirIgMessage = new FhirIgMessage(Level.ERROR, message, args);
+		this.addMessage(fhirIgMessage);
+		throw new JobRunnerException(fhirIgMessage.getMessageText());
+	}
+
+	@Override
 	public void addError(Exception exception) throws JobRunnerException {
 		FhirIgMessage fhirIgMessage = new FhirIgMessage(exception, Level.ERROR, exception
 				.getLocalizedMessage());
+		this.addMessage(fhirIgMessage);
+		if (this.interruptOnError) {
+			throw new JobRunnerException(fhirIgMessage.getMessageText(), exception);
+		}
+	}
+
+	@Override
+	public void addError(Exception exception, String message, Object... args)
+			throws JobRunnerException {
+		FhirIgMessage fhirIgMessage = new FhirIgMessage(exception, Level.ERROR, message,
+				args);
 		this.addMessage(fhirIgMessage);
 		if (this.interruptOnError) {
 			throw new JobRunnerException(fhirIgMessage.getMessageText(), exception);
