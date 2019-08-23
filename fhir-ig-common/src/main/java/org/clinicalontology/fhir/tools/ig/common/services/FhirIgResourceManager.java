@@ -38,9 +38,9 @@ public class FhirIgResourceManager implements ResourceManager {
 		}
 
 		this.resourcesFolder = this.getResourceFolder(this.configuration.getPaths()
-				.getResources(), "ig.path.resources");
+				.getResources(), "ig.path.resources", false);
 		this.artifactsFolder = this.getResourceFolder(this.configuration.getPaths()
-				.getArtifacts(), "ig.path.artifacts");
+				.getArtifacts(), "ig.path.artifacts", true);
 
 	}
 
@@ -101,14 +101,21 @@ public class FhirIgResourceManager implements ResourceManager {
 		return dir;
 	}
 
-	private File getResourceFolder(String resourceFolder, String configPath)
+	private File getResourceFolder(String resourceFolder, String configPath,
+			boolean create)
 			throws JobRunnerException {
 		File folder = new File(resourceFolder);
 		if (!folder.exists()) {
-			this.messageManager.addFatalError(
-					"Invalid %s: %s.  Does not exist",
-					configPath,
-					this.configuration.getPaths().getResources());
+			if (create) {
+				folder.mkdir();
+				this.messageManager.addInfo("Created %s", folder.getPath());
+			} else {
+				this.messageManager.addFatalError(
+						"Invalid %s: %s.  Does not exist",
+						configPath,
+						this.configuration.getPaths().getResources());
+			}
+
 		} else if (!folder.isDirectory()) {
 			this.messageManager.addFatalError(
 					"Invalid %s: %s.  Is not a folder",

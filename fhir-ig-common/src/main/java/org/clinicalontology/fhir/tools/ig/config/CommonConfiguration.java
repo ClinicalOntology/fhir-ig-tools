@@ -49,6 +49,7 @@ public class CommonConfiguration {
 	}
 
 	private Paths paths;
+	private String release;
 
 	private String project;
 
@@ -76,6 +77,14 @@ public class CommonConfiguration {
 
 	public void setProjects(Map<String, FhirIgProject> projects) {
 		this.projects = projects;
+	}
+
+	public String getRelease() {
+		return this.release;
+	}
+
+	public void setRelease(String release) {
+		this.release = release;
 	}
 
 }

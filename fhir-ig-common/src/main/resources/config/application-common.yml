@@ -4,6 +4,8 @@ ig:
     resources: resources
     artifacts: artifacts
     config: config
+  
+  release: r4
       
   project: sample
   projects:
