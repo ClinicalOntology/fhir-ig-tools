@@ -1,0 +1,19 @@
+
+ig:
+  paths:
+    resources: resources
+    artifacts: artifacts
+    config: config
+      
+  project: sample
+  projects:
+    sample: 
+      name: Sample Profile Set
+      path: sample
+      filter: "*.xml"
+    another:
+      name: Another profile set
+      path: another
+      filter: "*.xml"
+ 
+ 

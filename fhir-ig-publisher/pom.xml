@@ -5,11 +5,24 @@
     <parent>
         <artifactId>fhir-ig-tools</artifactId>
         <groupId>org.clinicalontology</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fhir-ig-publisher</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.clinicalontology</groupId>
+            <artifactId>fhir-ig-api</artifactId>
+         </dependency>
+        <dependency>
+        	<groupId>org.springframework.boot</groupId>
+        	<artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+    </dependencies>
 
 
 </project>

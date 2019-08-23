@@ -1,13 +1,11 @@
 package org.clinicalontology.fhir.tools.ig.api;
 
+import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
+
 public interface FhirIgPublisher {
 
-    void publish(MessageList messageList);
+	void publish() throws JobRunnerException;
 
-    boolean success();
-
-    public boolean interruptOnError();
-
-    public void setInterruptOnErrorFlag(boolean interruptOnError);
+	void init() throws JobRunnerException;
 
 }

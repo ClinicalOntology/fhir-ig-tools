@@ -1,0 +1,7 @@
+ig.validator:
+  interruptOnError: false
+  
+  paths:
+    validated: validated
+  
+  

@@ -1,20 +1,27 @@
 package org.clinicalontology.fhir.tools.ig.api;
 
-import org.clinicalontology.fhir.tools.ig.constants.LogMessageLevel;
-
 public interface Message {
 
-    LogMessageLevel getLevel();
+	public enum Level {
+		DEBUG,
+		INFO,
+		WARNING,
+		ERROR;
+	}
 
-    boolean isError();
+	Level getLevel();
 
-    boolean isWarning();
+	boolean isError();
 
-    boolean isInfo();
+	boolean isWarning();
 
-    String getMessageText();
+	boolean isInfo();
 
-    boolean hasAssociatedException();
+	boolean isDebug();
 
-    RuntimeException getAssociatedException();
+	String getMessageText();
+
+	boolean hasAssociatedException();
+
+	Exception getAssociatedException();
 }
