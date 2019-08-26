@@ -1,5 +1,9 @@
 ig.validator:
-  interruptOnError: false
+  interruptOnError: 
+    #interrupt if a single resource fails
+    onResource: false
+    #interrupt if the validation module gets an error
+    onModule: true
   
   paths:
     validated: validated

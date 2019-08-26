@@ -104,11 +104,8 @@ public class ParseErrorHandler implements IParserErrorHandler {
 
 	private void addError(String message, Object... args) {
 
-		String msg = String.format("%s: %s", this.sourceFile.getName(), String.format(
-				message, args));
-
 		try {
-			this.messageManager.addError(msg);
+			this.messageManager.addError(this.sourceFile, message, args);
 		} catch (JobRunnerException e) {
 		}
 	}

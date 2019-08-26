@@ -51,6 +51,11 @@ public class FhirIgResourceManager implements ResourceManager {
 	}
 
 	@Override
+	public String getSelectedProjectFolder() {
+		return this.selectedProject.getFolder();
+	}
+
+	@Override
 	public List<String> getSelectedProjectMembers() throws JobRunnerException {
 
 		List<String> files = new ArrayList<>();
@@ -89,7 +94,7 @@ public class FhirIgResourceManager implements ResourceManager {
 
 	private File getSelectedProjectResourceFolder() throws JobRunnerException {
 
-		File dir = new File(this.resourcesFolder, this.selectedProject.getPath());
+		File dir = new File(this.resourcesFolder, this.selectedProject.getFolder());
 		if (!dir.exists()) {
 			this.messageManager.addFatalError("%s does not exist", dir.getPath());
 		}

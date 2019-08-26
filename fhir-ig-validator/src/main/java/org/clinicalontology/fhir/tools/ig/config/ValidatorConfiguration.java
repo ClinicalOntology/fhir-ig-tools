@@ -15,7 +15,11 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "ig.validator")
 public class ValidatorConfiguration {
 
-	private Boolean interruptOnError;
+	@Value("${ig.validator.interruptOnError.onModule}")
+	private Boolean interruptIfErrorOnModule;
+
+	@Value("${ig.validator.interruptOnError.onResource}")
+	private Boolean interruptIfErrorOnResource;
 
 	@Value("${ig.validator.paths.validated}")
 	private String validatedPath;
@@ -28,12 +32,20 @@ public class ValidatorConfiguration {
 		this.validatedPath = validatedPath;
 	}
 
-	public Boolean getInterruptOnError() {
-		return this.interruptOnError;
+	public Boolean getInterruptIfErrorOnModule() {
+		return this.interruptIfErrorOnModule;
 	}
 
-	public void setInterruptOnError(Boolean interruptOnError) {
-		this.interruptOnError = interruptOnError;
+	public void setInterruptIfErrorOnModule(Boolean interruptIfErrorOnModule) {
+		this.interruptIfErrorOnModule = interruptIfErrorOnModule;
+	}
+
+	public Boolean getInterruptIfErrorOnResource() {
+		return this.interruptIfErrorOnResource;
+	}
+
+	public void setInterruptIfErrorOnResource(Boolean interruptIfErrorOnResource) {
+		this.interruptIfErrorOnResource = interruptIfErrorOnResource;
 	}
 
 }

@@ -36,7 +36,7 @@ public class FhirIgPublisherImpl implements FhirIgPublisher {
 	public void publish() throws JobRunnerException {
 
 		this.messageManager.setInterruptOnErrorFlag(this.publisherConfiguration
-				.getInterruptOnError());
+				.getInterruptIfErrorOnResource());
 
 		// dummied up validation: simple copy validated file to destination folder
 		for (String filename : this.validator.getValidatedResources()) {
@@ -44,7 +44,9 @@ public class FhirIgPublisherImpl implements FhirIgPublisher {
 					filename);
 		}
 
-		this.messageManager.interruptOnError("Published");
+		if (this.publisherConfiguration.getInterruptIfErrorOnModule()) {
+			this.messageManager.interruptOnError("Published");
+		}
 
 	}
 

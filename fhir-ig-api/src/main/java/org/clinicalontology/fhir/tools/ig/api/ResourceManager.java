@@ -23,4 +23,6 @@ public interface ResourceManager {
 	public File getSelectedProjectMember(String modelName) throws JobRunnerException;
 
 	public void init() throws JobRunnerException;
+
+	public String getSelectedProjectFolder();
 }

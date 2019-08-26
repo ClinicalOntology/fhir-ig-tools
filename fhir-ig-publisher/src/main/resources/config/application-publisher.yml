@@ -1,5 +1,9 @@
 ig.publisher:
-  interruptOnError: false
+  interruptOnError: 
+    #interrupt if a single resource fails
+    onResource: false
+    #interrupt if the publisher module gets an error
+    onModule: false
   
   paths:
     published: published

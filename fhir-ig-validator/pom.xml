@@ -12,7 +12,7 @@
 	</parent>
 
 	<artifactId>fhir-ig-validator</artifactId>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
@@ -42,6 +42,16 @@
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-validation-resources-r4</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.helger</groupId>
+			<artifactId>ph-schematron</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.helger</groupId>
+			<artifactId>ph-commons</artifactId>
 		</dependency>
 
 		<dependency>

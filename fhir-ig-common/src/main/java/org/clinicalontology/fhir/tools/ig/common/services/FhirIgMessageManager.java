@@ -3,6 +3,7 @@
  */
 package org.clinicalontology.fhir.tools.ig.common.services;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,8 @@ public class FhirIgMessageManager implements MessageManager {
 	private ElapsedTime elapsedTime;
 
 	private boolean interruptOnError;
+	// set when updating interruptOnError flag
+	private int baseErrorCount;
 
 	@Override
 	public void init() {
@@ -58,11 +61,12 @@ public class FhirIgMessageManager implements MessageManager {
 	@Override
 	public void setInterruptOnErrorFlag(boolean state) {
 		this.interruptOnError = state;
+		this.baseErrorCount = this.errorCount;
 	}
 
 	@Override
 	public void interruptOnError(String module) throws JobRunnerException {
-		if (this.errorCount > 0) {
+		if (this.errorCount > this.baseErrorCount) {
 			throw new JobRunnerException("Errors Present in " + module);
 		}
 
@@ -150,6 +154,19 @@ public class FhirIgMessageManager implements MessageManager {
 	@Override
 	public void addError(String message, Object... args) throws JobRunnerException {
 		FhirIgMessage fhirIgMessage = new FhirIgMessage(Level.ERROR, message, args);
+		this.addMessage(fhirIgMessage);
+		if (this.interruptOnError) {
+			throw new JobRunnerException(fhirIgMessage.getMessageText());
+		}
+
+	}
+
+	@Override
+	public void addError(File source, String message, Object... args)
+			throws JobRunnerException {
+		String localMessage = String.format(message, args);
+		FhirIgMessage fhirIgMessage = new FhirIgMessage(Level.ERROR, "%s: %s", source
+				.getName(), localMessage);
 		this.addMessage(fhirIgMessage);
 		if (this.interruptOnError) {
 			throw new JobRunnerException(fhirIgMessage.getMessageText());
