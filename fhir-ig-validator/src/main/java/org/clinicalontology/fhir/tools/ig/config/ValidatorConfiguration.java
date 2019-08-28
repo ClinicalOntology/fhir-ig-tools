@@ -21,8 +21,30 @@ public class ValidatorConfiguration {
 	@Value("${ig.validator.interruptOnError.onResource}")
 	private Boolean interruptIfErrorOnResource;
 
+	@Value("${ig.validator.validate.onSchema}")
+	private Boolean validateOnSchema;
+
+	@Value("${ig.validator.validate.onSchematron}")
+	private Boolean validateOnSchematron;
+
 	@Value("${ig.validator.paths.validated}")
 	private String validatedPath;
+
+	public Boolean getValidateOnSchema() {
+		return this.validateOnSchema;
+	}
+
+	public void setValidateOnSchema(Boolean validateOnSchema) {
+		this.validateOnSchema = validateOnSchema;
+	}
+
+	public Boolean getValidateOnSchematron() {
+		return this.validateOnSchematron;
+	}
+
+	public void setValidateOnSchematron(Boolean validateOnSchematron) {
+		this.validateOnSchematron = validateOnSchematron;
+	}
 
 	public String getValidatedPath() {
 		return this.validatedPath;

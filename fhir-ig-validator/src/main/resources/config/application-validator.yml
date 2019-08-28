@@ -4,7 +4,10 @@ ig.validator:
     onResource: false
     #interrupt if the validation module gets an error
     onModule: true
-  
+  validate:
+    onSchema: true
+    onSchematron: false
+    
   paths:
     validated: validated
   

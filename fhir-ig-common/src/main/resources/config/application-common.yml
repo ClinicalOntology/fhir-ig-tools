@@ -5,14 +5,14 @@ ig:
     artifacts: artifacts
     config: config
   
-  release: dstu3
+  release: r4
       
   project: sample
   projects:
     sample: 
       name: Sample Profile Set
       folder: sample
-      filter: "Body*.xml"
+      filter: "*.xml"
     another:
       name: Another profile set
       folder: another

@@ -197,8 +197,11 @@ public class FhirIgValidatorImpl implements FhirIgValidator {
 
 		// Ask the context for a validator
 		this.validator = this.fhirContext.newValidator();
-		this.validator.setValidateAgainstStandardSchema(true);
-		this.validator.setValidateAgainstStandardSchematron(true);
+		// set config options for validator
+		this.validator.setValidateAgainstStandardSchema(
+				this.validatorConfiguration.getValidateOnSchema());
+		this.validator.setValidateAgainstStandardSchematron(
+				this.validatorConfiguration.getValidateOnSchematron());
 
 	}
 

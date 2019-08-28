@@ -102,6 +102,14 @@ public class ParseErrorHandler implements IParserErrorHandler {
 
 	}
 
+	@Override
+	public void extensionContainsValueAndNestedExtensions(IParseLocation theLocation) {
+		this.addError("Extension contains both a value and nested extensions: %s",
+				theLocation
+						.getParentElementName());
+
+	}
+
 	private void addError(String message, Object... args) {
 
 		try {
