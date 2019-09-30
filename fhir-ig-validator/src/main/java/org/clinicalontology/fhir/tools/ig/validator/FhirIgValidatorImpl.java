@@ -106,7 +106,6 @@ public class FhirIgValidatorImpl implements FhirIgValidator {
 		} catch (ConfigurationException | DataFormatException | FileNotFoundException e) {
 			this.messageManager.addError(e, e.getLocalizedMessage());
 		}
-
 	}
 
 	@Override

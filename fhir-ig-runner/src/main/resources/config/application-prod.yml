@@ -1,0 +1,3 @@
+logging:
+  level:
+    org.clinicalontology.fhir.tools.ig: WARN

@@ -36,7 +36,6 @@ public class FhirIgResourceManager implements ResourceManager {
 					"Invalid ig.package: %s.  Does not match a package in the packages list",
 					this.configuration.getProject());
 		}
-
 		this.resourcesFolder = this.getResourceFolder(this.configuration.getPaths()
 				.getResources(), "ig.path.resources", false);
 		this.artifactsFolder = this.getResourceFolder(this.configuration.getPaths()
