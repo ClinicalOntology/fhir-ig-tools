@@ -1,5 +1,6 @@
 package org.clinicalontology.fhir.tools.ig.runner;
 
+import org.clinicalontology.fhir.tools.ig.api.CommonServices;
 import org.clinicalontology.fhir.tools.ig.api.FhirIgPublisher;
 import org.clinicalontology.fhir.tools.ig.api.FhirIgRunner;
 import org.clinicalontology.fhir.tools.ig.api.FhirIgValidator;
@@ -28,6 +29,9 @@ public class FhirIgRunnerImpl implements FhirIgRunner {
 	@Autowired
 	private FhirIgPublisher publisher;
 
+	@Autowired
+	private CommonServices commonServices;
+
 	@Override
 	public void runJob() {
 
@@ -36,10 +40,12 @@ public class FhirIgRunnerImpl implements FhirIgRunner {
 			// do the initialization here so we can capture exceptions cleanly
 			this.messageManager.init();
 			this.resourceManager.init();
+			this.commonServices.init();
 			this.validator.init();
 			this.publisher.init();
 
-			this.messageManager.addInfo("Started");
+			this.messageManager.addInfo("Started project: %s", this.resourceManager
+					.getSelectedProjectName());
 
 			if (this.runValidator) {
 				this.validator.validate();
@@ -81,7 +87,6 @@ public class FhirIgRunnerImpl implements FhirIgRunner {
 					this.runPublisher = true;
 					break;
 				default:
-					// TODO throw error here
 					break;
 				}
 			}

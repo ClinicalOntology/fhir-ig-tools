@@ -24,8 +24,22 @@ public class PublisherConfiguration {
 	@Value("${ig.publisher.paths.published}")
 	private String publishedPath;
 
+	@Value("${ig.publisher.paths.narratives}")
+	private String narrativesPath;
+
+	@Value("${ig.publisher.paths.snapshots}")
+	private String snapshotsPath;
+
 	public String getPublishedPath() {
 		return this.publishedPath;
+	}
+
+	public String getNarrativesPath() {
+		return this.narrativesPath;
+	}
+
+	public String getSnapshotsPath() {
+		return this.snapshotsPath;
 	}
 
 	public void setPublishedPath(String publishedPath) {

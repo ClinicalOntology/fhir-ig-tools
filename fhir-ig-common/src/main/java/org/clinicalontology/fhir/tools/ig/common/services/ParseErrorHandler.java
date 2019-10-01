@@ -1,12 +1,13 @@
 /**
  *
  */
-package org.clinicalontology.fhir.tools.ig.validator;
+package org.clinicalontology.fhir.tools.ig.common.services;
 
 import java.io.File;
 
 import org.clinicalontology.fhir.tools.ig.api.MessageManager;
 import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
+import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.parser.IParserErrorHandler;
 import ca.uhn.fhir.parser.json.JsonLikeValue.ScalarType;
@@ -16,6 +17,7 @@ import ca.uhn.fhir.parser.json.JsonLikeValue.ValueType;
  * @author dtsteven
  *
  */
+@Service
 public class ParseErrorHandler implements IParserErrorHandler {
 
 	private final MessageManager messageManager;

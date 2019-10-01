@@ -7,3 +7,5 @@ ig.publisher:
   
   paths:
     published: published
+    narratives: narratives
+    snapshots: snapshots

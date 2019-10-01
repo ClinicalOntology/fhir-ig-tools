@@ -30,6 +30,12 @@ public class ValidatorConfiguration {
 	@Value("${ig.validator.paths.validated}")
 	private String validatedPath;
 
+	@Value("${ig.validator.paths.outcomes}")
+	private String outcomesPath;
+
+	@Value("${ig.validator.paths.resources}")
+	private String resourcesPath;
+
 	public Boolean getValidateOnSchema() {
 		return this.validateOnSchema;
 	}
@@ -48,6 +54,14 @@ public class ValidatorConfiguration {
 
 	public String getValidatedPath() {
 		return this.validatedPath;
+	}
+
+	public String getOutcomesPath() {
+		return this.outcomesPath;
+	}
+
+	public String getResourcesPath() {
+		return this.resourcesPath;
 	}
 
 	public void setValidatedPath(String validatedPath) {
