@@ -9,7 +9,6 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.clinicalontology.fhir.tools.ig.api.CommonServices;
 import org.clinicalontology.fhir.tools.ig.api.MessageManager;
-import org.clinicalontology.fhir.tools.ig.config.CommonConfiguration;
 import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,11 +25,11 @@ import ca.uhn.fhir.validation.FhirValidator;
 public class FhirIgCommonServices implements CommonServices {
 
 	@Autowired
-	private CommonConfiguration commonConfiguration;
-	@Autowired
 	private MessageManager messageManager;
 	@Autowired
 	private ParseErrorHandler parseErrorHandler;
+	@Autowired
+	private FhirIgResourceManager resourceManager;
 
 	private FhirContext fhirContext;
 	private IParser xmlParser;
@@ -55,8 +54,8 @@ public class FhirIgCommonServices implements CommonServices {
 
 	private void computeFhirContext() throws JobRunnerException {
 
-		if (this.commonConfiguration.getRelease() != null) {
-			switch (this.commonConfiguration.getRelease().toLowerCase()) {
+		if (this.resourceManager.getVersion() != null) {
+			switch (this.resourceManager.getVersion().toLowerCase()) {
 			case "dstu3":
 				this.fhirContext = FhirContext.forDstu3();
 				break;
@@ -70,7 +69,7 @@ public class FhirIgCommonServices implements CommonServices {
 			if (this.fhirContext == null) {
 				this.messageManager.addError(
 						"Unknown value for ig.release: %s.  Must be one of 'dstu3,r4'",
-						this.commonConfiguration.getRelease());
+						this.resourceManager.getVersion());
 			} else {
 				this.xmlParser = this.fhirContext.newXmlParser();
 				this.parseErrorHandler = new ParseErrorHandler(this.messageManager);

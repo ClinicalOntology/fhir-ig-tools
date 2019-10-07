@@ -13,6 +13,7 @@ public class FhirIgProject {
 	private String name;
 	private String folder;
 	private String filter;
+	private String version;
 
 	public String getName() {
 		return this.name;
@@ -36,5 +37,13 @@ public class FhirIgProject {
 
 	public void setFilter(String filter) {
 		this.filter = filter;
+	}
+
+	public String getVersion() {
+		return this.version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 }

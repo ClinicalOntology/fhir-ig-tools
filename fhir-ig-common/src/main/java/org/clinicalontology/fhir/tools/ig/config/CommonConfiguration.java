@@ -49,18 +49,8 @@ public class CommonConfiguration {
 	}
 
 	private Paths paths;
-	private String release;
-
+	private String version;
 	private String project;
-
-	public String getProject() {
-		return this.project;
-	}
-
-	public void setProject(String project) {
-		this.project = project;
-	}
-
 	private Map<String, FhirIgProject> projects = new HashMap<>();
 
 	public Paths getPaths() {
@@ -71,6 +61,14 @@ public class CommonConfiguration {
 		this.paths = paths;
 	}
 
+	public String getProject() {
+		return this.project;
+	}
+
+	public void setProject(String project) {
+		this.project = project;
+	}
+
 	public Map<String, FhirIgProject> getProjects() {
 		return this.projects;
 	}
@@ -79,12 +77,12 @@ public class CommonConfiguration {
 		this.projects = projects;
 	}
 
-	public String getRelease() {
-		return this.release;
+	public String getVersion() {
+		return this.version;
 	}
 
-	public void setRelease(String release) {
-		this.release = release;
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 }

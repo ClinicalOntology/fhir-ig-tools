@@ -9,7 +9,8 @@ spring:
 ig:
   runner:
     name: "IG Publisher"
-  release: r4
+  #default version for each project
+  version: r4
 #  project: sample
   paths:
     # input files
@@ -21,5 +22,6 @@ ig:
 #    sample: 
 #      name: Sample Profile Set
 #      folder: sample
-#      filter: "*.xml"
+#      filter: "*.xml"  -- default is all files
+#      version: r4      -- default is {ig.version}
 

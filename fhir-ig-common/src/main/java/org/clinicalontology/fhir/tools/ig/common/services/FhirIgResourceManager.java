@@ -26,6 +26,7 @@ public class FhirIgResourceManager implements ResourceManager {
 	private FhirIgProject selectedProject;
 	private File resourcesFolder;
 	private File artifactsFolder;
+	private String version;
 
 	@Override
 	public void init() throws JobRunnerException {
@@ -40,7 +41,8 @@ public class FhirIgResourceManager implements ResourceManager {
 				.getResources(), "ig.path.resources", false);
 		this.artifactsFolder = this.getResourceFolder(this.configuration.getPaths()
 				.getArtifacts(), "ig.path.artifacts", true);
-
+		this.version = this.selectedProject.getVersion() != null ? this.selectedProject.getVersion()
+				: this.configuration.getVersion();
 	}
 
 	@Override
@@ -133,6 +135,11 @@ public class FhirIgResourceManager implements ResourceManager {
 
 	public File getArtifactsFolder() {
 		return this.artifactsFolder;
+	}
+
+	@Override
+	public String getVersion() {
+		return this.version;
 	}
 
 }

@@ -25,4 +25,6 @@ public interface ResourceManager {
 	public void init() throws JobRunnerException;
 
 	public String getSelectedProjectFolder();
+
+	public String getVersion();
 }
