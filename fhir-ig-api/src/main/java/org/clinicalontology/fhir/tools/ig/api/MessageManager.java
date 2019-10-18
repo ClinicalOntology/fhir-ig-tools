@@ -1,5 +1,6 @@
 package org.clinicalontology.fhir.tools.ig.api;
 
+import java.io.File;
 import java.util.List;
 
 import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
@@ -66,5 +67,7 @@ public interface MessageManager {
 	void addInfo(String message, Object... args);
 
 	void addDebug(String message, Object... args);
+
+	void addError(File source, String message, Object... args) throws JobRunnerException;
 
 }

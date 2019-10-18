@@ -1,3 +1,7 @@
 ig:
   runner:
-    name: "My Application Name (TEST)"
+    name: "IG Publisher(TEST)"
+
+logging:
+  level:
+    org.clinicalontology.fhir.tools.ig: INFO

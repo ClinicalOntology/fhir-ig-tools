@@ -1,7 +1,19 @@
 ig.validator:
-  interruptOnError: false
-  
+  interruptOnError: 
+    #interrupt if a single resource fails
+    onResource: false
+    #interrupt if the validation module gets an error
+    onModule: false
+  validate:
+    onSchema: true
+    onSchematron: false
+    
   paths:
+    #root folder of the validator module
     validated: validated
+    #validated structure definitions
+    resources: resources
+    #outcomes of validator
+    outcomes: outcomes
   
   

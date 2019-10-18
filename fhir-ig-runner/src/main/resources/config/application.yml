@@ -6,6 +6,22 @@ spring:
       - validator
       - publisher
 
-ig.runner:
-    name: "My Application Name"
- 
+ig:
+  runner:
+    name: "IG Publisher"
+  #default version for each project
+  version: r4
+#  project: sample
+  paths:
+    # input files
+    resources: resources
+    # generated output files
+    artifacts: artifacts
+    config: config
+  projects:
+#    sample: 
+#      name: Sample Profile Set
+#      folder: sample
+#      filter: "*.xml"  -- default is all files
+#      version: r4      -- default is {ig.version}
+

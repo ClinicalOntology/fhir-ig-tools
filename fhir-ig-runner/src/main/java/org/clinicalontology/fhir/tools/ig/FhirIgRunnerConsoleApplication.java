@@ -19,6 +19,7 @@ public class FhirIgRunnerConsoleApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
+		this.runner.processCommandArgs(args);
 		this.runner.runJob();
 	}
 

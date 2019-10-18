@@ -2,4 +2,7 @@ logging:
   level:
     org.clinicalontology.fhir.tools.ig: INFO
 
+ig:
+  runner:
+    name: "IG Publisher(DEV)"
 

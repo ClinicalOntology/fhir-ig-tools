@@ -15,25 +15,73 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "ig.validator")
 public class ValidatorConfiguration {
 
-	private Boolean interruptOnError;
+	@Value("${ig.validator.interruptOnError.onModule}")
+	private Boolean interruptIfErrorOnModule;
+
+	@Value("${ig.validator.interruptOnError.onResource}")
+	private Boolean interruptIfErrorOnResource;
+
+	@Value("${ig.validator.validate.onSchema}")
+	private Boolean validateOnSchema;
+
+	@Value("${ig.validator.validate.onSchematron}")
+	private Boolean validateOnSchematron;
 
 	@Value("${ig.validator.paths.validated}")
 	private String validatedPath;
 
+	@Value("${ig.validator.paths.outcomes}")
+	private String outcomesPath;
+
+	@Value("${ig.validator.paths.resources}")
+	private String resourcesPath;
+
+	public Boolean getValidateOnSchema() {
+		return this.validateOnSchema;
+	}
+
+	public void setValidateOnSchema(Boolean validateOnSchema) {
+		this.validateOnSchema = validateOnSchema;
+	}
+
+	public Boolean getValidateOnSchematron() {
+		return this.validateOnSchematron;
+	}
+
+	public void setValidateOnSchematron(Boolean validateOnSchematron) {
+		this.validateOnSchematron = validateOnSchematron;
+	}
+
 	public String getValidatedPath() {
 		return this.validatedPath;
+	}
+
+	public String getOutcomesPath() {
+		return this.outcomesPath;
+	}
+
+	public String getResourcesPath() {
+		return this.resourcesPath;
 	}
 
 	public void setValidatedPath(String validatedPath) {
 		this.validatedPath = validatedPath;
 	}
 
-	public Boolean getInterruptOnError() {
-		return this.interruptOnError;
+	public Boolean getInterruptIfErrorOnModule() {
+		return this.interruptIfErrorOnModule;
 	}
 
-	public void setInterruptOnError(Boolean interruptOnError) {
-		this.interruptOnError = interruptOnError;
+	public void setInterruptIfErrorOnModule(Boolean interruptIfErrorOnModule) {
+		this.interruptIfErrorOnModule = interruptIfErrorOnModule;
+	}
+
+	public Boolean getInterruptIfErrorOnResource() {
+		return this.interruptIfErrorOnResource;
+	}
+
+	public void setInterruptIfErrorOnResource(Boolean interruptIfErrorOnResource) {
+		this.interruptIfErrorOnResource = interruptIfErrorOnResource;
 	}
 
 }

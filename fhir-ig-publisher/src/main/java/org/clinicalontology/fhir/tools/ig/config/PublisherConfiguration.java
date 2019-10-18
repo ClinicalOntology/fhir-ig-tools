@@ -15,25 +15,51 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "ig.publisher")
 public class PublisherConfiguration {
 
-	private Boolean interruptOnError;
+	@Value("${ig.publisher.interruptOnError.onModule}")
+	private Boolean interruptIfErrorOnModule;
+
+	@Value("${ig.publisher.interruptOnError.onResource}")
+	private Boolean interruptIfErrorOnResource;
 
 	@Value("${ig.publisher.paths.published}")
 	private String publishedPath;
 
+	@Value("${ig.publisher.paths.narratives}")
+	private String narrativesPath;
+
+	@Value("${ig.publisher.paths.snapshots}")
+	private String snapshotsPath;
+
 	public String getPublishedPath() {
 		return this.publishedPath;
+	}
+
+	public String getNarrativesPath() {
+		return this.narrativesPath;
+	}
+
+	public String getSnapshotsPath() {
+		return this.snapshotsPath;
 	}
 
 	public void setPublishedPath(String publishedPath) {
 		this.publishedPath = publishedPath;
 	}
 
-	public Boolean getInterruptOnError() {
-		return this.interruptOnError;
+	public Boolean getInterruptIfErrorOnModule() {
+		return this.interruptIfErrorOnModule;
 	}
 
-	public void setInterruptOnError(Boolean interruptOnError) {
-		this.interruptOnError = interruptOnError;
+	public void setInterruptIfErrorOnModule(Boolean interruptIfErrorOnModule) {
+		this.interruptIfErrorOnModule = interruptIfErrorOnModule;
+	}
+
+	public Boolean getInterruptIfErrorOnResource() {
+		return this.interruptIfErrorOnResource;
+	}
+
+	public void setInterruptIfErrorOnResource(Boolean interruptIfErrorOnResource) {
+		this.interruptIfErrorOnResource = interruptIfErrorOnResource;
 	}
 
 }

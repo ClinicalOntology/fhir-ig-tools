@@ -11,8 +11,9 @@ package org.clinicalontology.fhir.tools.ig.model;
 public class FhirIgProject {
 
 	private String name;
-	private String path;
+	private String folder;
 	private String filter;
+	private String version;
 
 	public String getName() {
 		return this.name;
@@ -22,12 +23,12 @@ public class FhirIgProject {
 		this.name = name;
 	}
 
-	public String getPath() {
-		return this.path;
+	public String getFolder() {
+		return this.folder;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setFolder(String folder) {
+		this.folder = folder;
 	}
 
 	public String getFilter() {
@@ -36,5 +37,13 @@ public class FhirIgProject {
 
 	public void setFilter(String filter) {
 		this.filter = filter;
+	}
+
+	public String getVersion() {
+		return this.version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 }
