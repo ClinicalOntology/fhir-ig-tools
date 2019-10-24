@@ -30,6 +30,12 @@ public class PublisherConfiguration {
 	@Value("${ig.publisher.paths.snapshots}")
 	private String snapshotsPath;
 
+	@Value("${ig.publisher.paths.templates}")
+	private String templatesPath;
+
+	@Value("${ig.publisher.paths.website}")
+	private String websitePath;
+
 	public String getPublishedPath() {
 		return this.publishedPath;
 	}
@@ -40,6 +46,14 @@ public class PublisherConfiguration {
 
 	public String getSnapshotsPath() {
 		return this.snapshotsPath;
+	}
+
+	public String getTemplatesPath() {
+		return this.templatesPath;
+	}
+
+	public String getWebsitePath() {
+		return this.websitePath;
 	}
 
 	public void setPublishedPath(String publishedPath) {
