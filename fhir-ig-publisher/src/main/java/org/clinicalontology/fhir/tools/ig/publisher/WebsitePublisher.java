@@ -55,6 +55,9 @@ public class WebsitePublisher {
 	@Autowired
 	private FhirIgResourceManager resourceManager;
 
+	@Autowired
+	private ZipfilePublisher zipfilePublisher;
+
 	private Configuration cfg;
 	private File projectTemplatesFolder;
 	private File templatesFolder;
@@ -77,6 +80,19 @@ public class WebsitePublisher {
 
 		this.initConfiguration();
 
+	}
+
+	/**
+	 * publish all the site specific files
+	 *
+	 * @throws JobRunnerException
+	 */
+	public void publish() throws JobRunnerException {
+
+		this.createIndexHtml();
+		this.moveAssetsToWebsite();
+
+		this.zipfilePublisher.publish(this.websiteFolder);
 	}
 
 	/**
@@ -123,18 +139,6 @@ public class WebsitePublisher {
 			this.messageManager.addError(e, "Reading %s", file.getName());
 		}
 		return model;
-	}
-
-	/**
-	 * publish all the site specific files
-	 *
-	 * @throws JobRunnerException
-	 */
-	public void publish() throws JobRunnerException {
-
-		this.createIndexHtml();
-		this.moveAssetsToWebsite();
-
 	}
 
 	private void createIndexHtml() throws JobRunnerException {
