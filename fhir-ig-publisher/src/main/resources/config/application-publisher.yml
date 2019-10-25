@@ -6,6 +6,12 @@ ig.publisher:
     onModule: false
   
   paths:
+    # relative to artifacts
     published: published
+    # relative to published
     narratives: narratives
     snapshots: snapshots
+    website: website
+    #relative to resources and resources/project
+    templates: templates
+    

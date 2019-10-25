@@ -48,11 +48,13 @@ public class FhirIgPublisherImpl implements FhirIgPublisher {
 	@Autowired
 	private NarrativePublisher narrativePublisher;
 
-	private ValidationSupportChain validationSupport;
+	@Autowired
+	private WebsitePublisher websitePublisher;
+
+	private ValidationSupportChain validationSupportChain;
 	private FhirContext fhirContext;
 
-	private File projectNarrativesFolder;
-	private File projectSnapshotsFolder;
+	private File publishFolder;
 
 	@Override
 	public void init() throws JobRunnerException {
@@ -60,28 +62,31 @@ public class FhirIgPublisherImpl implements FhirIgPublisher {
 		this.fhirContext = this.commonServices.getFhirContext();
 		this.initPublishingEngine();
 		this.initFolders();
+
+		this.snapshotPublisher.init(this.publishFolder, this.validationSupportChain);
+		this.narrativePublisher.init(this.publishFolder, this.validationSupportChain);
+		this.websitePublisher.init(this.publishFolder, this.validationSupportChain);
+
 	}
 
 	@Override
 	public void publish() throws JobRunnerException {
 
-		this.commonServices.resetFolder(this.projectNarrativesFolder);
-		this.commonServices.resetFolder(this.projectSnapshotsFolder);
-
 		this.messageManager.setInterruptOnErrorFlag(this.publisherConfiguration
 				.getInterruptIfErrorOnResource());
 
-		// dummied up publish: simple copy published file to destination folder
 		for (String filename : this.validator.getValidatedResources()) {
 			File file = this.validator.getValidatedResource(filename);
 
-			this.snapshotPublisher.publish(this.validationSupport, this.projectSnapshotsFolder,
-					file);
-			this.narrativePublisher.publish(this.validationSupport, this.projectNarrativesFolder,
-					file);
+			this.snapshotPublisher.publish(file);
+			this.narrativePublisher.publish(file);
+			this.websitePublisher.publish(file);
+
 			this.messageManager.addInfo("Published structure Definition: %s",
 					filename);
 		}
+
+		this.websitePublisher.publish();
 
 		if (this.publisherConfiguration.getInterruptIfErrorOnModule()) {
 			this.messageManager.interruptOnError("Published");
@@ -92,18 +97,10 @@ public class FhirIgPublisherImpl implements FhirIgPublisher {
 	private void initFolders() throws JobRunnerException {
 
 		// find the publish folder
-		File publishFolder = this.commonServices.findOrCreateFolder(
+		this.publishFolder = this.commonServices.findOrCreateFolder(
 				this.resourceManager.getArtifactsFolder(),
 				this.resourceManager.getSelectedProjectFolder(),
 				this.publisherConfiguration.getPublishedPath());
-
-		// find narratives folder
-		this.projectNarrativesFolder = this.commonServices.findOrCreateFolder(
-				publishFolder, this.publisherConfiguration.getNarrativesPath());
-
-		// find snapshots folder
-		this.projectSnapshotsFolder = this.commonServices.findOrCreateFolder(
-				publishFolder, this.publisherConfiguration.getSnapshotsPath());
 
 	}
 
@@ -112,7 +109,7 @@ public class FhirIgPublisherImpl implements FhirIgPublisher {
 		DefaultProfileValidationSupport defaultValidationSupport = new DefaultProfileValidationSupport();
 		SnapshotGeneratingValidationSupport snapshotGenerator = new SnapshotGeneratingValidationSupport(
 				this.fhirContext, defaultValidationSupport);
-		this.validationSupport = new ValidationSupportChain(defaultValidationSupport,
+		this.validationSupportChain = new ValidationSupportChain(defaultValidationSupport,
 				snapshotGenerator);
 
 	}

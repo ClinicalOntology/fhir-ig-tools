@@ -21,7 +21,6 @@ public class CommonConfiguration {
 	public static class Paths {
 		private String resources;
 		private String artifacts;
-		private String config;
 
 		public String getResources() {
 			return this.resources;
@@ -39,13 +38,6 @@ public class CommonConfiguration {
 			this.artifacts = artifacts;
 		}
 
-		public String getConfig() {
-			return this.config;
-		}
-
-		public void setConfig(String config) {
-			this.config = config;
-		}
 	}
 
 	private Paths paths;

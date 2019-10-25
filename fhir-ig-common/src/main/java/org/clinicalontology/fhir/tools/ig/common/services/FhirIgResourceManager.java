@@ -24,6 +24,8 @@ public class FhirIgResourceManager implements ResourceManager {
 	private MessageManager messageManager;
 
 	private FhirIgProject selectedProject;
+	private File selectedProjectResourceFolder;
+
 	private File resourcesFolder;
 	private File artifactsFolder;
 	private String version;
@@ -41,6 +43,8 @@ public class FhirIgResourceManager implements ResourceManager {
 				.getResources(), "ig.path.resources", false);
 		this.artifactsFolder = this.getResourceFolder(this.configuration.getPaths()
 				.getArtifacts(), "ig.path.artifacts", true);
+		this.selectedProjectResourceFolder = this.findSelectedProjectResourceFolder();
+
 		this.version = this.selectedProject.getVersion() != null ? this.selectedProject.getVersion()
 				: this.configuration.getVersion();
 	}
@@ -60,18 +64,17 @@ public class FhirIgResourceManager implements ResourceManager {
 	public List<String> getSelectedProjectMembers() throws JobRunnerException {
 
 		List<String> files = new ArrayList<>();
-		File dir = this.getSelectedProjectResourceFolder();
 
 		String[] fileList;
 		if (this.selectedProject.getFilter() == null) {
-			fileList = dir.list();
+			fileList = this.selectedProjectResourceFolder.list();
 		} else {
 			FilenameFilter fileFilter = new WildcardFileFilter(this.selectedProject
 					.getFilter());
-			fileList = dir.list(fileFilter);
+			fileList = this.selectedProjectResourceFolder.list(fileFilter);
 		}
 		for (String filename : fileList) {
-			File file = new File(dir, filename);
+			File file = new File(this.selectedProjectResourceFolder, filename);
 			if (file.isFile()) {
 				files.add(filename);
 			}
@@ -83,8 +86,7 @@ public class FhirIgResourceManager implements ResourceManager {
 	@Override
 	public File getSelectedProjectMember(String filename) throws JobRunnerException {
 
-		File dir = this.getSelectedProjectResourceFolder();
-		File file = new File(dir, filename);
+		File file = new File(this.selectedProjectResourceFolder, filename);
 		if (file.exists() && file.isFile()) {
 			return file;
 		} else {
@@ -93,7 +95,7 @@ public class FhirIgResourceManager implements ResourceManager {
 
 	}
 
-	private File getSelectedProjectResourceFolder() throws JobRunnerException {
+	public File findSelectedProjectResourceFolder() throws JobRunnerException {
 
 		File dir = new File(this.resourcesFolder, this.selectedProject.getFolder());
 		if (!dir.exists()) {
@@ -135,6 +137,14 @@ public class FhirIgResourceManager implements ResourceManager {
 
 	public File getArtifactsFolder() {
 		return this.artifactsFolder;
+	}
+
+	public File getResourcesFolder() {
+		return this.resourcesFolder;
+	}
+
+	public File getSelectedProjectResourceFolder() {
+		return this.selectedProjectResourceFolder;
 	}
 
 	@Override

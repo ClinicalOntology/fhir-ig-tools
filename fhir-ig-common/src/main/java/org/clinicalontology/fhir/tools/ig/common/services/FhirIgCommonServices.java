@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.validation.FhirValidator;
 
@@ -50,6 +51,14 @@ public class FhirIgCommonServices implements CommonServices {
 
 	public FhirValidator getValidator() {
 		return this.validator;
+	}
+
+	public void setNarrativeGenerator(INarrativeGenerator gen) {
+		this.fhirContext.setNarrativeGenerator(gen);
+	}
+
+	public void resetNarrativeGenerator() {
+		this.fhirContext.setNarrativeGenerator(null);
 	}
 
 	private void computeFhirContext() throws JobRunnerException {

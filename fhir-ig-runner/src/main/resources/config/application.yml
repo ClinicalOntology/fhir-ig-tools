@@ -11,14 +11,13 @@ ig:
     name: "IG Publisher"
   #default version for each project
   version: r4
-#  project: sample
   paths:
     # input files
     resources: resources
     # generated output files
     artifacts: artifacts
-    config: config
-  projects:
+
+#  projects:
 #    sample: 
 #      name: Sample Profile Set
 #      folder: sample

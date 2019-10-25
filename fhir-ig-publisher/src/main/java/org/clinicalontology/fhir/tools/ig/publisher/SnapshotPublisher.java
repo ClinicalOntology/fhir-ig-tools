@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import org.apache.commons.io.FileUtils;
 import org.clinicalontology.fhir.tools.ig.api.MessageManager;
 import org.clinicalontology.fhir.tools.ig.common.services.FhirIgCommonServices;
+import org.clinicalontology.fhir.tools.ig.config.PublisherConfiguration;
 import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
 import org.hl7.fhir.r4.hapi.validation.ValidationSupportChain;
 import org.hl7.fhir.r4.model.StructureDefinition;
@@ -30,21 +31,36 @@ public class SnapshotPublisher {
 	@Autowired
 	private MessageManager messageManager;
 
-	public void publish(ValidationSupportChain validationSupport, File snapshotFolder,
-			File profile) throws JobRunnerException {
+	@Autowired
+	private PublisherConfiguration publisherConfiguration;
+
+	private File projectSnapshotsFolder;
+	private ValidationSupportChain validationSupportChain;
+
+	public void init(File publishFolder,
+			ValidationSupportChain validationSupportChain) throws JobRunnerException {
+
+		// find snapshots folder
+		this.projectSnapshotsFolder = this.commonServices.findOrCreateFolder(
+				publishFolder, this.publisherConfiguration.getSnapshotsPath());
+		this.commonServices.resetFolder(this.projectSnapshotsFolder);
+		this.validationSupportChain = validationSupportChain;
+	}
+
+	public void publish(File profile) throws JobRunnerException {
 
 		try {
 			StructureDefinition sd = this.commonServices.getXmlParser().parseResource(
-					StructureDefinition.class,
-					new FileReader(profile));
+					StructureDefinition.class, new FileReader(profile));
 
-			validationSupport.generateSnapshot(sd, "http://ihc.hdd", null, "MyProfile");
+			this.validationSupportChain.generateSnapshot(sd, "http://ihc.hdd", null, "MyProfile");
 
-			String sdString = this.commonServices.getXmlParser().setPrettyPrint(true)
-					.encodeResourceToString(
-							sd);
+			String sdString = this.commonServices
+					.getXmlParser()
+					.setPrettyPrint(true)
+					.encodeResourceToString(sd);
 
-			this.putResourceInSnapshotFolder(sdString, profile.getName(), snapshotFolder);
+			this.putResourceInSnapshotFolder(sdString, profile.getName(), this.projectSnapshotsFolder);
 		} catch (IOException e) {
 			this.messageManager.addError(e, "Error writing file: %s: %s", profile.getName(), e
 					.getLocalizedMessage());
