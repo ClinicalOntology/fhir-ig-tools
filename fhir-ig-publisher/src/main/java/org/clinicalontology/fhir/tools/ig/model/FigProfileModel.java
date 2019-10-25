@@ -50,54 +50,10 @@ public class FigProfileModel {
 	public Map<String, Object> getModel() {
 		return this.model;
 	}
-//	public ElementDefinition findDifferentialElement(String path) {
-//		String[] keys = this.split(path);
-//
-//		return this.differentialTree.get(keys);
-//	}
-//
-//	public ElementDefinition findSnapshotElement(String path) {
-//		String[] keys = this.split(path);
-//
-//		return this.snapshotTree.get(keys);
-//	}
-//
-//	public FigTreeNode<String, ElementDefinition> getDifferentialTree() {
-//		return this.differentialTree;
-//	}
-//
-//	public FigTreeNode<String, ElementDefinition> getSnapshotTree() {
-//		return this.snapshotTree;
-//	}
 
 	public StructureDefinition getSD() {
 		return this.sd;
 	}
-
-//	public String getName() {
-//		return this.name;
-//	}
-//
-//	public String getBaseName() {
-//		return this.baseName;
-//	}
-
-//	public boolean isConstraint() {
-//		return TypeDerivationRule.CONSTRAINT.equals(this.derivation);
-//	}
-//
-//	public boolean isSpecialization() {
-//		return TypeDerivationRule.SPECIALIZATION.equals(this.derivation);
-//	}
-
-	/**
-	 * is not specialized, i.e. is a base definition
-	 *
-	 * @return
-	 */
-//	public boolean isNotSpecialized() {
-//		return TypeDerivationRule.NULL.equals(this.derivation);
-//	}
 
 	private String[] split(String key) {
 		return StringUtils.split(key, '.');
