@@ -14,45 +14,49 @@ import org.hl7.fhir.r4.model.StructureDefinition.StructureDefinitionDifferential
 import org.hl7.fhir.r4.model.StructureDefinition.StructureDefinitionSnapshotComponent;
 import org.hl7.fhir.r4.model.StructureDefinition.TypeDerivationRule;
 
+import freemarker.template.ObjectWrapper;
+import freemarker.template.TemplateModelException;
+
 /**
  * @author dtsteven
  *
- *         class containing all the info of the SD with addition elements to
- *         assist in building the cem.
+ *         class containing all the info of the SD in format usable by
+ *         freemarker
  */
+
 public class FigProfileModel {
-	private final StructureDefinition sd;
-	private final Map<String, Object> model = new HashMap<>();
-	private final FigTreeNode<String, Map<String, String>> differentialTree = new FigTreeNode<>();
-	private final FigTreeNode<String, Map<String, String>> snapshotTree = new FigTreeNode<>();
 
-	public FigProfileModel(StructureDefinition sd) {
-		this.sd = sd;
+	private ObjectWrapper wrapper;
 
-		this.model.put("name", this.getNameFromUrl(sd.getUrl()));
-		this.model.put("baseName", this.getNameFromUrl(sd.getUrl()));
-		this.model.put("derivation", sd.getDerivation() != null ? sd.getDerivation() : TypeDerivationRule.NULL);
-		this.model.put("abstract", sd.getAbstract());
+	public FigProfileModel(ObjectWrapper wrapper) {
+		this.wrapper = wrapper;
+	}
+
+	public Map<String, Object> process(StructureDefinition sd) throws TemplateModelException {
+
+		// this.sd = sd;
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("name", this.getNameFromUrl(sd.getUrl()));
+		model.put("baseName", this.getNameFromUrl(sd.getBaseDefinition()));
+		model.put("derivation", sd.getDerivation() != null ? sd.getDerivation() : TypeDerivationRule.NULL);
+		model.put("abstract", sd.getAbstract());
 
 		if (sd.hasSnapshot()) {
+			ElementNode snapshotTree = new ElementNode(this.wrapper);
 			StructureDefinitionSnapshotComponent snapshot = sd.getSnapshot();
-			this.createElementTree(snapshot.getElement(), this.snapshotTree);
-			this.model.put("snapshot", this.snapshotTree);
+			this.createElementTree(snapshot.getElement(), snapshotTree);
+			model.put("snapshot", snapshotTree);
 		}
 		if (sd.hasDifferential()) {
+			ElementNode differentialTree = new ElementNode(this.wrapper);
 			StructureDefinitionDifferentialComponent differential = sd
 					.getDifferential();
-			this.createElementTree(differential.getElement(), this.differentialTree);
-			this.model.put("differential", this.differentialTree);
+			this.createElementTree(differential.getElement(), differentialTree);
+			model.put("differential", differentialTree);
 		}
-	}
 
-	public Map<String, Object> getModel() {
-		return this.model;
-	}
-
-	public StructureDefinition getSD() {
-		return this.sd;
+		return model;
 	}
 
 	private String[] split(String key) {
@@ -73,18 +77,10 @@ public class FigProfileModel {
 	}
 
 	private void createElementTree(List<ElementDefinition> elements,
-			FigTreeNode<String, Map<String, String>> tree) {
+			ElementNode tree) throws TemplateModelException {
 		for (ElementDefinition element : elements) {
 			String[] keys = this.split(element.getPath());
-			Map<String, String> map = new HashMap<>();
-			map.put("name", "element");
-			map.put("label", keys[keys.length - 1]);
-			tree.add(keys, map);
+			tree.add(keys, element);
 		}
-
 	}
-
-//	public boolean isAbstract() {
-//		return this.isAbstract;
-//	}
 }

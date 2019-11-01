@@ -14,4 +14,14 @@ ig.publisher:
     website: website
     #relative to resources and resources/project
     templates: templates
-    
+    #list of files in the resources/assets folder to be copied to website
+    assets:
+      - jquery/jquery.min.js
+      - bootstrap/bootstrap.min.css
+      - bootstrap/bootstrap.min.js
+      - bootstrap/popper.min.js
+      - jstree/style.min.css
+      - jstree/jstree.min.js
+      - jstree/throbber.gif
+      - jstree/32px.png
+  

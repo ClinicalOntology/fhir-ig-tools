@@ -3,7 +3,6 @@
  */
 package org.clinicalontology.fhir.tools.ig.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,65 +14,134 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "ig.publisher")
 public class PublisherConfiguration {
 
-	@Value("${ig.publisher.interruptOnError.onModule}")
-	private Boolean interruptIfErrorOnModule;
+	public static class InterruptOnError {
+		private boolean onModule;
+		private boolean onResource;
 
-	@Value("${ig.publisher.interruptOnError.onResource}")
-	private Boolean interruptIfErrorOnResource;
+		public boolean isOnModule() {
+			return this.onModule;
+		}
 
-	@Value("${ig.publisher.paths.published}")
-	private String publishedPath;
+		public void setOnModule(boolean onModule) {
+			this.onModule = onModule;
+		}
 
-	@Value("${ig.publisher.paths.narratives}")
-	private String narrativesPath;
+		public boolean isOnResource() {
+			return this.onResource;
+		}
 
-	@Value("${ig.publisher.paths.snapshots}")
-	private String snapshotsPath;
+		public void setOnResource(boolean onResource) {
+			this.onResource = onResource;
+		}
+	}
 
-	@Value("${ig.publisher.paths.templates}")
-	private String templatesPath;
+	public static class Paths {
+		private String published;
+		private String narratives;
+		private String snapshots;
+		private String website;
 
-	@Value("${ig.publisher.paths.website}")
-	private String websitePath;
+		public String getPublished() {
+			return this.published;
+		}
+
+		public void setPublished(String published) {
+			this.published = published;
+		}
+
+		public String getNarratives() {
+			return this.narratives;
+		}
+
+		public void setNarratives(String narratives) {
+			this.narratives = narratives;
+		}
+
+		public String getSnapshots() {
+			return this.snapshots;
+		}
+
+		public void setSnapshots(String snapshots) {
+			this.snapshots = snapshots;
+		}
+
+		public String getWebsite() {
+			return this.website;
+		}
+
+		public void setWebsite(String website) {
+			this.website = website;
+		}
+
+		public String getTemplates() {
+			return this.templates;
+		}
+
+		public void setTemplates(String templates) {
+			this.templates = templates;
+		}
+
+		public String[] getAssets() {
+			return this.assets;
+		}
+
+		public void setAssets(String[] assets) {
+			this.assets = assets;
+		}
+
+		private String templates;
+		private String[] assets;
+	}
+
+	private InterruptOnError interruptOnError;
+	private Paths paths;
+
+	public InterruptOnError getInterruptOnError() {
+		return this.interruptOnError;
+	}
+
+	public void setInterruptOnError(InterruptOnError interruptOnError) {
+		this.interruptOnError = interruptOnError;
+	}
+
+	public Paths getPaths() {
+		return this.paths;
+	}
+
+	public void setPaths(Paths paths) {
+		this.paths = paths;
+	}
+
+	public String[] getAssetPaths() {
+		return this.paths.assets;
+	}
 
 	public String getPublishedPath() {
-		return this.publishedPath;
+		return this.paths.published;
 	}
 
 	public String getNarrativesPath() {
-		return this.narrativesPath;
+		return this.paths.narratives;
 	}
 
 	public String getSnapshotsPath() {
-		return this.snapshotsPath;
+		return this.paths.snapshots;
 	}
 
 	public String getTemplatesPath() {
-		return this.templatesPath;
+		return this.paths.templates;
 	}
 
 	public String getWebsitePath() {
-		return this.websitePath;
-	}
-
-	public void setPublishedPath(String publishedPath) {
-		this.publishedPath = publishedPath;
+		return this.paths.website;
 	}
 
 	public Boolean getInterruptIfErrorOnModule() {
-		return this.interruptIfErrorOnModule;
-	}
-
-	public void setInterruptIfErrorOnModule(Boolean interruptIfErrorOnModule) {
-		this.interruptIfErrorOnModule = interruptIfErrorOnModule;
+		return this.interruptOnError.onModule;
 	}
 
 	public Boolean getInterruptIfErrorOnResource() {
-		return this.interruptIfErrorOnResource;
-	}
-
-	public void setInterruptIfErrorOnResource(Boolean interruptIfErrorOnResource) {
-		this.interruptIfErrorOnResource = interruptIfErrorOnResource;
+		return this.interruptOnError.onResource;
 	}
 
 }
