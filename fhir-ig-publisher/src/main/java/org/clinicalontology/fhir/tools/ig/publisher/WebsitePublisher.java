@@ -22,8 +22,8 @@ import org.clinicalontology.fhir.tools.ig.common.services.FhirIgCommonServices;
 import org.clinicalontology.fhir.tools.ig.common.services.FhirIgResourceManager;
 import org.clinicalontology.fhir.tools.ig.config.PublisherConfiguration;
 import org.clinicalontology.fhir.tools.ig.exception.JobRunnerException;
+import org.clinicalontology.fhir.tools.ig.model.FigProfileModel;
 import org.hl7.fhir.r4.hapi.validation.ValidationSupportChain;
-import org.hl7.fhir.r4.model.ElementDefinition;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,6 +35,7 @@ import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModelException;
 
 /**
  * @author dtsteven
@@ -58,6 +59,8 @@ public class WebsitePublisher {
 	@Autowired
 	private ZipfilePublisher zipfilePublisher;
 
+	private FigProfileModel figProfileModel;
+
 	private Configuration cfg;
 	private File projectTemplatesFolder;
 	private File templatesFolder;
@@ -79,6 +82,8 @@ public class WebsitePublisher {
 		this.initFolders(publishFolder);
 
 		this.initConfiguration();
+
+		this.figProfileModel = new FigProfileModel(this.cfg.getObjectWrapper());
 
 	}
 
@@ -118,27 +123,20 @@ public class WebsitePublisher {
 	}
 
 	private Map<String, Object> generateProfileModel(File file, File fileHtml) throws JobRunnerException {
-		Map<String, Object> model = new HashMap<String, Object>();
+
 		try {
 			StructureDefinition sd = this.commonServices.getXmlParser()
 					.parseResource(StructureDefinition.class, new FileReader(file));
 			this.validationSupportChain.generateSnapshot(sd, "http://ihc.hdd", null, "MyProfile");
 
-			model.put("name", sd.getName());
+			Map<String, Object> model = this.figProfileModel.process(sd);
 			model.put("link", fileHtml.getName());
-			List<Map<String, Object>> elements = new ArrayList<Map<String, Object>>();
-			model.put("elements", elements);
-
-			for (ElementDefinition element : sd.getDifferential().getElement()) {
-				Map<String, Object> elementModel = new HashMap<String, Object>();
-				elementModel.put("path", element.getPath());
-				elements.add(elementModel);
-			}
-
-		} catch (FileNotFoundException e) {
+			return model;
+		} catch (FileNotFoundException | TemplateModelException e) {
 			this.messageManager.addError(e, "Reading %s", file.getName());
+			return null;
 		}
-		return model;
+
 	}
 
 	private void createIndexHtml() throws JobRunnerException {
@@ -157,14 +155,12 @@ public class WebsitePublisher {
 
 	}
 
-	private static final String[] assets = new String[] {
-			"bootstrap.min.css", "bootstrap.min.js", "jquery.min.js", "popper.min.js"
-	};
-
 	private void moveAssetsToWebsite() throws JobRunnerException {
 		File assetsFolder = this.commonServices.findOrCreateFolder(
 				this.websiteFolder, "assets");
 		this.commonServices.resetFolder(assetsFolder);
+
+		String[] assets = this.publisherConfiguration.getAssetPaths();
 
 		for (String asset : assets) {
 			try (InputStream is = this.getClass().getResourceAsStream("/assets/" + asset)) {

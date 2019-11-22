@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.clinicalontology.fhir.tools.ig.model;
+package org.clinicalontology.fhir.tools.ig.common.util;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,18 +13,18 @@ import java.util.Map;
  * @author dtsteven
  *
  */
-public class FigTreeNode<K, P> implements Iterable<FigTreeNode<K, P>> {
+public class TreeNode<K, P> implements Iterable<TreeNode<K, P>> {
 
 	private final P payload;
 	private final K key;
-	private final FigTreeNode<K, P> parent;
-	private Map<K, FigTreeNode<K, P>> children = Collections.emptyMap();
+	private final TreeNode<K, P> parent;
+	private Map<K, TreeNode<K, P>> children = Collections.emptyMap();
 
-	public FigTreeNode() {
+	public TreeNode() {
 		this(null, null, null); // root of the tree
 	}
 
-	private FigTreeNode(P payload, FigTreeNode<K, P> parent, K key) {
+	private TreeNode(P payload, TreeNode<K, P> parent, K key) {
 		this.payload = payload;
 		this.parent = parent;
 		this.key = key;
@@ -37,7 +37,7 @@ public class FigTreeNode<K, P> implements Iterable<FigTreeNode<K, P>> {
 	 * @param payload
 	 * @return null if node already exists otherwise this for chained calls
 	 */
-	public FigTreeNode<K, P> add(K key, P payload) {
+	public TreeNode<K, P> add(K key, P payload) {
 
 		if (this.children.containsKey(key)) {
 			return null;
@@ -47,7 +47,7 @@ public class FigTreeNode<K, P> implements Iterable<FigTreeNode<K, P>> {
 			this.children = new LinkedHashMap<>();
 		}
 
-		FigTreeNode<K, P> childNode = new FigTreeNode<K, P>(payload, this, key);
+		TreeNode<K, P> childNode = new TreeNode<K, P>(payload, this, key);
 		this.children.put(key, childNode);
 		return childNode;
 	}
@@ -59,12 +59,12 @@ public class FigTreeNode<K, P> implements Iterable<FigTreeNode<K, P>> {
 	 * @param payload
 	 * @return null if node exists or path not found otherwise this
 	 */
-	public FigTreeNode<K, P> add(K[] keys, P payload) {
+	public TreeNode<K, P> add(K[] keys, P payload) {
 		if (keys == null || keys.length == 0) {
 			return null;
 		}
 		K[] local = Arrays.copyOf(keys, keys.length - 1);
-		FigTreeNode<K, P> node = this.getNode(local);
+		TreeNode<K, P> node = this.getNode(local);
 		if (node != null) {
 			return node.add(keys[keys.length - 1], payload);
 		} else {
@@ -73,16 +73,20 @@ public class FigTreeNode<K, P> implements Iterable<FigTreeNode<K, P>> {
 	}
 
 	public P get(K key) {
-		FigTreeNode<K, P> result = this.getNode(key);
+		TreeNode<K, P> result = this.getNode(key);
 		return result != null ? result.payload : null;
 	}
 
 	public P get(K[] keys) {
-		FigTreeNode<K, P> result = this.getNode(keys);
+		TreeNode<K, P> result = this.getNode(keys);
 		return result != null ? result.payload : null;
 	}
 
-	public FigTreeNode<K, P> parent() {
+	public Map<K, TreeNode<K, P>> children() {
+		return this.children;
+	}
+
+	public TreeNode<K, P> parent() {
 		return this.parent;
 	}
 
@@ -94,13 +98,13 @@ public class FigTreeNode<K, P> implements Iterable<FigTreeNode<K, P>> {
 		return this.key;
 	}
 
-	public FigTreeNode<K, P> getNode(K key) {
+	public TreeNode<K, P> getNode(K key) {
 		return this.children.get(key);
 	}
 
-	public FigTreeNode<K, P> getNode(K[] keys) {
+	public TreeNode<K, P> getNode(K[] keys) {
 
-		FigTreeNode<K, P> current = this;
+		TreeNode<K, P> current = this;
 		for (K key : keys) {
 			current = current.getNode(key);
 			if (current == null) {
@@ -111,7 +115,7 @@ public class FigTreeNode<K, P> implements Iterable<FigTreeNode<K, P>> {
 	}
 
 	@Override
-	public Iterator<FigTreeNode<K, P>> iterator() {
+	public Iterator<TreeNode<K, P>> iterator() {
 		return this.children.values().iterator();
 	}
 
@@ -126,5 +130,4 @@ public class FigTreeNode<K, P> implements Iterable<FigTreeNode<K, P>> {
 		}
 		return sb.toString();
 	}
-
 }

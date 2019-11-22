@@ -15,25 +15,33 @@
 	<div class="container-fluid">
 	    <div class="row justify-content-center">
 		    <div class="col-4">
-		    <#list elements>
-		    	
-			    	<table class="table">
-			    	<thead>
-			    	<tr><th scope="col">Profiles:</th></tr>
-			    	</thead>
-			    	<tbody>
-			    	<#items as element>
-			    		<tr><td>${element.path}</a></td></tr>
-			    	</#items>
-			    	</tbody>
-			    	</table>
-		    	
-		    <#else>
-		    	<h2>No profiles found</h2>
-		    </#list>	
+			<#if baseName??>
+				<p>Base Definition: ${baseName}</p>
+			</#if>
+			<div id="elements">
+ 			<@element differential></@element>
+ 			</div>
+
 		    </div>
 		</div>
     </div>
 <#include "footer.ftl">
    </body>
+  <#include "scripts.ftl">
+     <script type="text/javascript">
+   		$(function () { 
+   			$('#elements').jstree();
+   		});
+   	  </script>
 </html>
+
+<#macro element local> 
+	${local.name!}
+	<ul>
+	<#list local.children as item>
+		<li>
+			<@element item></@element>
+		</li>
+	</#list>
+	</ul>
+</#macro>
